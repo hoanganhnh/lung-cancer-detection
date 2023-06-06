@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Upload Scan
+{% endblock %}
+
+{% block main %}
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <select name="name">
+                {% for patient in patients %}
+                    <option value="{{ patient['name'] }}">{{ patient['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="file" name="file" placeholder="PET Scan" type="file" accept="image/png">
+        </div>
+        <button class="btn btn-primary" type="submit">Upload Scan</button>
+    </form>
+{% endblock %}

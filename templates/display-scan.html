@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    PET Scan Data
+{% endblock %}
+
+{% block main %}
+    <div class="table">
+        <h1>PET Scan Data</h1>
+        <table style="border:1px solid black;margin-left:auto;margin-right:auto;margin-top:30px;width:70%;">
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Scan Date</th>
+                    <th>Raw Scan</th>
+                    <th>Annotated Scan</th>
+                    <th>Tumor Cross-Sectional Area (cm^2)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ patient }}</td>
+                    <td>{{ date }}</td>
+                    <td><img src="{{url_for('static', filename='images/raw_scan.png')}}", width="300px"/></td>
+                    <td><img src="{{url_for('static', filename='images/annotated_scan.png')}}", width="300px"/></td>
+                    <td>{{ area }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

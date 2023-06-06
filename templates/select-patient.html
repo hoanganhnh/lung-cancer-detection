@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Select Patient
+{% endblock %}
+
+{% block main %}
+    <form action="/select-patient" method="post">
+        <select name="name">
+            {% for patient in patients %}
+                <option value="{{ patient['name'] }}">{{ patient['name'] }}</option>
+            {% endfor %}
+        </select>
+        <div class="mb-3"></div>
+            <button class="btn btn-primary" type="submit">Select Patient</button>
+        </div>
+    </form>
+{% endblock %}

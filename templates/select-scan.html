@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Select Scan Date
+{% endblock %}
+
+{% block main %}
+    <form action="/select-scan" method="post">
+
+        {{ patient }}
+        
+        <div class="mb-3">
+            <select name="date">
+                {% for date in dates %}
+                    <option value="{{ date['date'] }}">{{ date['date'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">Select Scan Date</button>
+        </div>
+    </form>
+{% endblock %}
