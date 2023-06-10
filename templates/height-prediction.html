@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Add Patient
+{% endblock %}
+
+{% block main %}
+
+<form action="/height-prediction" method="post">
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="height_father" name="height_father"
+            placeholder="Height father" type="number">
+    </div>
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="height_father" name="height_mother"
+            placeholder="Height mother" type="number">
+    </div>
+    <div class="mb-3">
+        <select name=gender" class="form-select form-control mx-auto w-auto" aria-label="Default select Gender">
+            <option selected>Gender</option>
+            <option value="0">Female</option>
+            <option value="1">Male</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="height_father" name="number_of_child_family"
+            placeholder="Second child in the family?" type="number">
+    </div>
+    <button class="btn btn-primary" type="submit">Predict</button>
+</form>
+
+{% endblock %}

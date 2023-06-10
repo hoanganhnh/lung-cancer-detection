@@ -337,6 +337,15 @@ def input_rqm():
         return render_template("input-rqm.html")
 
 
+@app.route("/height-prediction", methods=["GET", "POST"])
+@login_required
+def height_prediction():
+    if request.method == "POST":
+        return render_template("display-height-prediction.html", height=165)
+    else:
+        return render_template("height-prediction.html")
+
+
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
