@@ -1,12 +1,12 @@
 import cv2
 
 
-def execute():
+def execute(path):
 
     # 1) IMAGE PROCESSING: Read and binarize image
 
     # Read scan image to OpenCV in grayscale
-    img = cv2.imread('./static/images/raw_scan.png', cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
 
     # Binarize image using user-defined threshold
     bin_threshold = 100
@@ -38,8 +38,8 @@ def execute():
     img_annotated = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
     cv2.drawContours(img_annotated, contours, -1, (0, 0, 255), 2)
 
-    # Save annotated scan as .png image to project directory
-    cv2.imwrite('./static/images/annotated_scan.png', img_annotated)
+    # Save annotated scan as .jpg image to project directory
+    cv2.imwrite('./static/images/annotated_scan.jpg', img_annotated)
 
     # Return annotated PET scan image and cross-sectional area
     return img_annotated, area

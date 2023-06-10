@@ -15,15 +15,17 @@
                     <th>Raw Scan</th>
                     <th>Annotated Scan</th>
                     <th>Tumor Cross-Sectional Area (cm^2)</th>
+                    <th>Predict</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>{{ patient }}</td>
                     <td>{{ date }}</td>
-                    <td><img src="{{url_for('static', filename='images/raw_scan.png')}}", width="300px"/></td>
-                    <td><img src="{{url_for('static', filename='images/annotated_scan.png')}}", width="300px"/></td>
+                    <td><img src="{{url_for('static', filename='images/raw_scan.jpg')}}", width="300px"/></td>
+                    <td><img src="{{url_for('static', filename='images/annotated_scan.jpg')}}", width="300px"/></td>
                     <td>{{ area }}</td>
+                    <td>{{ predict }}</td>
                 </tr>
             </tbody>
         </table>

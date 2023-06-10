@@ -1,34 +1,35 @@
-import joblib
+import cv2
+import numpy as np
+import pandas as pd
+
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops, perimeter
-from skimage.morphology import (
-    ball,
-    disk,
-    dilation,
-    binary_erosion,
-    remove_small_objects,
-    erosion,
-    closing,
-    reconstruction,
-    binary_closing,
-    opening,
-    binary_opening,
-    binary_dilation,
-)
+from skimage.morphology import ball, disk, dilation, binary_erosion, remove_small_objects, erosion, closing, reconstruction, binary_closing, opening, binary_opening, binary_dilation
 from skimage.filters import roberts, sobel
 from scipy import ndimage as ndi
-import cv2
 
-knnModel = joblib.load("KNN.pkl")
+import joblib
+
+
+def paddingImage(img):
+    if img.shape[0] > img.shape[1]:
+        zeros_col = np.zeros((img.shape[0], 1))
+        img = np.hstack((img, zeros_col))
+    elif img.shape[0] < img.shape[1]:
+        zeros_row = np.zeros((1, img.shape[1]))
+        img = np.vstack((img, zeros_row))
+    return img
 
 
 def get_segmented_lungs(im, num, save=False, plot=False, crop_percentage=0.05):
+    # This funtion segments the lungs from the given 2D slice.
+
     crop = im.copy()
 
     # Step 1: Crop the image
     height, width = im.shape[:2]
-    start_row, start_col = int(height * 0.12), int(width * 0.12)
-    end_row, end_col = int(height * 0.88), int(width * 0.88)
+    start_row, start_col = int(height*0.12), int(width*0.12)
+    end_row, end_col = int(height*0.88), int(width*0.88)
     crop = crop[start_row:end_row, start_col:end_col]
 
     # Step 2: Convert into a binary image.
@@ -72,11 +73,36 @@ def get_segmented_lungs(im, num, save=False, plot=False, crop_percentage=0.05):
     superimpose[get_high_vals] = 0
 
     superimpose = cv2.resize(superimpose, (512, 512))
-
     return superimpose
 
 
-def predict(image):
-    segment_lung = get_segmented_lungs(image)
-    res = knnModel.predict(segment_lung)
-    return res
+PATH_MODEL = '/media/hoanganh/D/dev/python/lung-cancer-detection/model/DecisionTreeClassifier.pkl'
+
+loaded_model = joblib.load(PATH_MODEL)
+
+categories = ['Bengin cases', 'Malignant cases', 'Normal cases']
+
+
+def predictImg(img):
+    img = paddingImage(img)
+    img = cv2.resize(img, (512, 512))
+    zzz = get_segmented_lungs(img, num=1)
+    zzz = cv2.resize(zzz, (128, 128))
+    hog = cv2.HOGDescriptor()
+    zzz = hog.compute(zzz)
+    X_test = [zzz, zzz]
+    y_pred = loaded_model.predict(X_test)
+    return categories[y_pred[0]]
+
+
+def readImage(path):
+    img = cv2.imread(
+        path, cv2.IMREAD_GRAYSCALE)
+
+    return img
+
+
+# PATH_IMG = "/media/hoanganh/D/dev/python/lung-cancer-detection/static/images/test/Bengin.jpg"
+# img = readImage(PATH_IMG)
+
+# print(predictImg(img))
