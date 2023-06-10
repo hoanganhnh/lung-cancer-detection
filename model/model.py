@@ -22,7 +22,7 @@ def paddingImage(img):
 
 
 def get_segmented_lungs(im, num, save=False, plot=False, crop_percentage=0.05):
-    # This funtion segments the lungs from the given 2D slice.
+    # This function segments the lungs from the given 2D slice.
 
     crop = im.copy()
 
