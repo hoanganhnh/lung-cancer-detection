@@ -1,7 +1,8 @@
 import joblib
 import numpy as np
 
-model = joblib.load("New Folder/Models/randomForest_model.pkl")
+model = joblib.load(
+    "/media/hoanganh/D/dev/python/lung-cancer-detection/text-process/models/randomForest_model.pkl")
 
 
 def predict(
@@ -12,7 +13,6 @@ def predict(
     cooking=0,
     air_pollution=0,
     cig_smoke=0,
-    smoking=0,
     herbicide=0,
     insecticides=0,
 ):
@@ -107,7 +107,6 @@ print(
         cooking,
         air_pollution,
         cig_smoke,
-        smoking,
         herbicide,
         insecticides,
     )

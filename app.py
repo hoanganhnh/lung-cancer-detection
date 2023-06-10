@@ -326,10 +326,15 @@ def upload():
         return render_template("upload.html", patients=patients)
 
 
-@app.route("/input-rpm", methods=["GET", "POST"])
+@app.route("/input-rqm", methods=["GET", "POST"])
 @login_required
 def input_rqm():
-    return render_template("input-rpm.html")
+    if request.method == "POST":
+        # if not request.form.get("name"):
+        #     return apology("must provide patient name", 400)
+        return render_template("display-search.html")
+    else:
+        return render_template("input-rqm.html")
 
 
 def errorhandler(e):
