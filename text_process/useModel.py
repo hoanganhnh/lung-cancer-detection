@@ -2,7 +2,7 @@ import joblib
 import numpy as np
 
 model = joblib.load(
-    "/media/hoanganh/D/dev/python/lung-cancer-detection/text-process/models/randomForest_model.pkl")
+    "text_process/models/randomForest_model.pkl")
 
 
 def predict(

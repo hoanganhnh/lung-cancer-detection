@@ -76,7 +76,7 @@ def get_segmented_lungs(im, num, save=False, plot=False, crop_percentage=0.05):
     return superimpose
 
 
-PATH_MODEL = '/media/hoanganh/D/dev/python/lung-cancer-detection/model/DecisionTreeClassifier.pkl'
+PATH_MODEL = 'model/DecisionTreeClassifier.pkl'
 
 loaded_model = joblib.load(PATH_MODEL)
 

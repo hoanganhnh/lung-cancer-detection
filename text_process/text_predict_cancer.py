@@ -1,7 +1,7 @@
 import joblib
 import numpy as np
 
-PATH_MODEL = "/media/hoanganh/D/dev/python/lung-cancer-detection/text_process/models/randomForest_model.pkl"
+PATH_MODEL = "text_process/models/randomForest_model.pkl"
 
 model = joblib.load(PATH_MODEL)
 
