@@ -13,6 +13,7 @@ from helpers import apology, login_required
 import segmentation
 from model.model import predictImg, readImage
 from text_process import text_predict_cancer
+from heightPredict.useModel import predict as heightPredict
 
 # Configure application
 app = Flask(__name__, static_url_path='/static')
@@ -350,7 +351,18 @@ def input_rqm():
 @login_required
 def height_prediction():
     if request.method == "POST":
-        return render_template("display-height-prediction.html", height=165)
+        height_father = int(request.form.get("height_father"))
+        height_mother = int(request.form.get("height_mother"))
+        gender = int(request.form.get("gender"))
+        number_of_child_family = int(
+            request.form.get("number_of_child_family"))
+
+        height = heightPredict(height_father - 100, height_mother - 100,
+                               gender, number_of_child_family)
+
+        height = height + 100
+
+        return render_template("display-height-prediction.html", height=height)
     else:
         return render_template("height-prediction.html")
 
