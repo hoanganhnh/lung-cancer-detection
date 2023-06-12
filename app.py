@@ -12,6 +12,7 @@ import numpy as np
 from helpers import apology, login_required
 import segmentation
 from model.model import predictImg, readImage
+from text_process import text_predict_cancer
 
 # Configure application
 app = Flask(__name__, static_url_path='/static')
@@ -322,9 +323,25 @@ def upload():
 @login_required
 def input_rqm():
     if request.method == "POST":
-        # if not request.form.get("name"):
-        #     return apology("must provide patient name", 400)
-        return render_template("display-search.html")
+        if not request.form.get("gender"):
+            return apology("must provide gender", 400)
+
+        gender = int(request.form.get("gender"))
+        age_group = int(request.form.get("age_group"))
+        farmer = int(request.form.get("farmer"))
+        distance_from_crop = int(request.form.get("distance_from_crop"))
+        air_pollution = int(request.form.get("air_pollution"))
+        cooking = int(request.form.get("cooking"))
+        polluted_environment = int(request.form.get("polluted_environment"))
+        smoking = int(request.form.get("smoking"))
+        number_smoked = int(request.form.get("number_smoked"))
+        pesticides = int(request.form.get("pesticides"))
+        herbicides = int(request.form.get("herbicides"))
+
+        result = text_predict_cancer.predict(
+            gender, age_group, farmer, distance_from_crop, cooking, air_pollution, cig_smoke=number_smoked, herbicide=herbicides, insecticides=pesticides)
+
+        return render_template("display-search.html", predict=result)
     else:
         return render_template("input-rqm.html")
 

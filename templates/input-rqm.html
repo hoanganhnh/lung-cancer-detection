@@ -5,18 +5,21 @@
 {% endblock %}
 
 {% block main %}
-
     <form action="/input-rqm" method="post">
         <div class="mb-3">
-            <select name=gender" class="form-select form-control mx-auto w-auto" aria-label="Default select Gender">
-                <option selected>Gender</option>
+            <h3>
+                <span class="label label-default">Gender:</span>
+            </h3>
+            <select name="gender" class="form-select form-control mx-auto w-auto" aria-label="Default select Gender">
                 <option value="0">Female</option>
                 <option value="1">Male</option>
             </select>
         </div>
         <div class="mb-3">
-            <select class="form-select form-control mx-auto w-auto" aria-label="Default select Age">
-                <option selected>Age Group</option>
+            <h3>
+                <span class="label label-default">Age Group:</span>
+            </h3>
+            <select name="age_group" class="form-select form-control mx-auto w-auto" aria-label="Default select Age">
                 <option value="0">0 - 58</option>
                 <option value="1">58 - 64</option>
                 <option value="2">65 - 75</option>
@@ -24,45 +27,86 @@
             </select>
         </div>
         <div class="mb-3">
-            <select class="form-select form-control mx-auto w-auto" aria-label="Default select Distance">
-                <option selected>Distance from crop</option>
+            <h3>
+                <span class="label label-default">Farmer:</span>
+            </h3>
+            <select name="farmer" class="form-select form-control mx-auto w-auto"
+                aria-label="Default select farmer">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <h3>
+                <span class="label label-default">Air pollution:</span>
+            </h3>
+            <select name="air_pollution" class="form-select form-control mx-auto w-auto" aria-label="Default select air pollution">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <h3>
+                <span class="label label-default">Distance from crop:</span>
+            </h3>
+            <select name="distance_from_crop" class="form-select form-control mx-auto w-auto" aria-label="Default select Distance">
                 <option value="0">0 - 500</option>
                 <option value="1">500 - 1000</option>
                 <option value="2"> > 1000</option>
             </select>
         </div>
         <div class="mb-3">
-            <select class="form-select form-control mx-auto w-auto" aria-label="Default select Cooking">
-                <option selected>Often in contact with the kitchen</option>
+            <h3>
+                <span class="label label-default">Often in contact with the kitchen:</span>
+            </h3>
+            <select name="cooking" class="form-select form-control mx-auto w-auto" aria-label="Default select Cooking">
                 <option value="1">Yes</option>
                 <option value="0">No</option>
             </select>
         </div>
         <div class="mb-3">
-            <select class="form-select form-control mx-auto w-auto" aria-label="Default select In a polluted environment">
-                <option selected>In a polluted environment</option>
+            <h3>
+                <span class="label label-default">In a polluted environment:</span>
+            </h3>
+            <select name="polluted_environment" class="form-select form-control mx-auto w-auto" aria-label="Default select In a polluted environment">
                 <option value="1">Yes</option>
                 <option value="0">No</option>
             </select>
         </div>
         <div class="mb-3">
-            <select class="form-select form-control mx-auto w-auto" aria-label="Default select number of cigarettes smoked">
-                <option selected>Number of cigarettes smoked</option>
+            <h3>
+                <span class="label label-default">Smoking:</span>
+            </h3>
+            <select name="smoking" class="form-select form-control mx-auto w-auto"
+                aria-label="Default select In a smoking">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <h3>
+                <span class="label label-default">Number of cigarettes smoked:</span>
+            </h3>
+            <select name="number_smoked" class="form-select form-control mx-auto w-auto" aria-label="Default select number of cigarettes smoked">
                 <option value="0">Never smoked or smoked very little</option>
                 <option value="1"> < 109500 </option>
                 <option value="2"> > 109500 </option>
             </select>
         </div>
         <div class="mb-3">
-            <select class="form-select form-control mx-auto w-auto" aria-label="Default select Frequent exposure to pesticides">
-                <option selected>Frequent exposure to pesticides</option>
+            <h3>
+                <span class="label label-default">Frequent exposure to pesticides:</span>
+            </h3>
+            <select name="pesticides" class="form-select form-control mx-auto w-auto" aria-label="Default select Frequent exposure to pesticides">
                 <option value="1">Yes</option>
                 <option value="0">No</option>
             </select>
         </div>
         <div class="mb-3">
-            <select class="form-select form-control mx-auto w-auto" aria-label="Default select Frequent exposure to herbicides">
-                <option selected>Frequent exposure to herbicides</option>
+            <h3>
+                <span class="label label-default">Frequent exposure to herbicides:</span>
+            </h3>
+            <select name="herbicides" class="form-select form-control mx-auto w-auto" aria-label="Default select Frequent exposure to herbicides">
                 <option value="1">Yes</option>
                 <option value="0">No</option>
             </select>
