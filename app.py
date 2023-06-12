@@ -25,6 +25,9 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///data.db")
 
+# db.execute("ALTER TABLE scans DROP COLUMN annotated_scan")
+# db.execute("ALTER TABLE scans DROP COLUMN area")
+
 # db.execute(
 #     "ALTER TABLE scans ADD predict varchar(255)")
 # print(db.execute("DELETE FROM scans WHERE date < '2023-01-01 00:00:00'"))
@@ -251,7 +254,7 @@ def select_scan():
             return apology("must provide date of scan", 400)
 
         # pull relevant PET scan information
-        scan = db.execute("SELECT date, raw_scan, annotated_scan, area, predict FROM scans WHERE date = ? AND patient_id = (SELECT id FROM patients WHERE name = ?)  ORDER BY date DESC",
+        scan = db.execute("SELECT date, raw_scan, predict FROM scans WHERE date = ? AND patient_id = (SELECT id FROM patients WHERE name = ?)  ORDER BY date DESC",
                           request.form.get("date"), session["patient_name"])[0]
 
         # Write raw scan image to project directory
@@ -259,13 +262,8 @@ def select_scan():
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         cv2.imwrite('./static/images/raw_scan.jpg', img)
 
-        # Write annotated scan image to project directory
-        nparr = np.frombuffer(scan['annotated_scan'], np.uint8)
-        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        cv2.imwrite('./static/images/annotated_scan.jpg', img)
-
         # Redirect user to 'display-scan' page to show PET scan data
-        return render_template("display-scan.html", patient=session["patient_name"], date=scan['date'], area=scan['area'], predict=scan['predict'])
+        return render_template("display-scan.html", patient=session["patient_name"], date=scan['date'], predict=scan['predict'])
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -286,7 +284,7 @@ def upload():
 
         # Ensure scan was submitted
         if request.files["file"].filename == '':
-            return apology("must provide patient PET scan", 400)
+            return apology("must provide patient CT scan", 400)
 
         # Find patient ID corresponding to provided name
         patient_id = db.execute(
@@ -300,12 +298,6 @@ def upload():
         # Save scan as .jpg image to project directory
         request.files['file'].save(PATH_IMG)
 
-        # Annotate scan using OpenCV script
-        annotated_scan, area = segmentation.execute(PATH_IMG)
-
-        # Convert annotated scan to compatible format for database
-        annotated_scan = cv2.imencode('.jpg', annotated_scan)[1].tobytes()
-
         # Convert raw scan to compatible format for database
         raw_scan = cv2.imencode('.jpg', cv2.imread(PATH_IMG))[1].tobytes()
 
@@ -313,11 +305,11 @@ def upload():
         predict = predictImg(raw_img)
 
         # Insert all PET scan data into scans table
-        db.execute("INSERT INTO scans (patient_id, raw_scan, annotated_scan, area, predict, date) VALUES (?, ?, ?, ?, ?, ?)",
-                   patient_id, raw_scan, annotated_scan, area, predict, date)
+        db.execute("INSERT INTO scans (patient_id, raw_scan, predict, date) VALUES (?, ?, ?, ?)",
+                   patient_id, raw_scan, predict, date)
 
         # Redirect user to 'display-scan' page to show PET scan data
-        return render_template("display-scan.html", patient=request.form.get("name"), date=date, area=area, predict=predict)
+        return render_template("display-scan.html", patient=request.form.get("name"), date=date, predict=predict)
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:

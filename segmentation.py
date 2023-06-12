@@ -1,45 +1,62 @@
 import cv2
 
+from skimage.segmentation import clear_border
+from skimage.morphology import disk, binary_closing, binary_erosion
+from skimage.measure import label, regionprops
+from skimage.filters import roberts
+from scipy import ndimage as ndi
 
-def execute(path):
 
-    # 1) IMAGE PROCESSING: Read and binarize image
+def get_segmented_lungs(im, num, save=False, plot=False, crop_percentage=0.05):
+    # This function segments the lungs from the given 2D slice.
 
-    # Read scan image to OpenCV in grayscale
-    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    crop = im.copy()
 
-    # Binarize image using user-defined threshold
-    bin_threshold = 100
-    img_binary = cv2.threshold(img, bin_threshold, 255, cv2.THRESH_BINARY)[1]
+    # Step 1: Crop the image
+    height, width = im.shape[:2]
+    start_row, start_col = int(height*0.12), int(width*0.12)
+    end_row, end_col = int(height*0.88), int(width*0.88)
+    crop = crop[start_row:end_row, start_col:end_col]
 
-    # 2) NOISE REMOVAL: Perform closing operation on image
+    # Step 2: Convert into a binary image.
+    ret, binary = cv2.threshold(crop, 140, 255, cv2.THRESH_BINARY_INV)
 
-    # Define an elliptical kernel
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
+    # Step 3: Remove the blobs connected to the border of the image.
+    cleared = clear_border(binary)
 
-    # Apply a closing operation to the image to reduce noise
-    img_closed = cv2.morphologyEx(img_binary, cv2.MORPH_CLOSE, kernel)
+    # Step 4: Closure operation with a disk of radius 10. This operation is
+    # to keep nodules attached to the lung wall.
+    selem = disk(2)
+    closing = binary_closing(cleared, selem)
 
-    # 3) SEGMENTATION: Segment tumor masses (if multiple) and find areas
+    # Step 5: Label the image.
+    label_image = label(closing)
 
-    # Use processed image and identify tumor contours
-    contours, _ = cv2.findContours(
-        img_closed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    # Step 6: Keep the labels with 2 largest areas.
+    areas = [r.area for r in regionprops(label_image)]
+    areas.sort()
+    if len(areas) > 2:
+        for region in regionprops(label_image):
+            if region.area < areas[-2]:
+                for coordinates in region.coords:
+                    label_image[coordinates[0], coordinates[1]] = 0
+    segmented_area = label_image > 0
 
-    # The maximum cross-sectional area of the tumor is a valuable marker to inform the clinician of tumor progression
-    # Find the areas of all detected masses
-    # conversion factor for px to cm for area, found based on PET scan dimensions
-    conversion_factor = 314
-    contour_areas = [round(cv2.contourArea(i)/conversion_factor, 3)
-                     for i in contours]
-    area = max(contour_areas)
+    # Step 7: separate the lung nodules attached to the blood vessels.
+    selem = disk(2)
+    erosion = binary_erosion(segmented_area, selem)
 
-    # Draw contours on image
-    img_annotated = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-    cv2.drawContours(img_annotated, contours, -1, (0, 0, 255), 2)
+    # Step 8: to keep nodules attached to the lung wall.
+    selem = disk(10)
+    closing2 = binary_closing(erosion, selem)
 
-    # Save annotated scan as .jpg image to project directory
-    cv2.imwrite('./static/images/annotated_scan.jpg', img_annotated)
+    # Step 9: Fill Holé
+    edges = roberts(closing2)
+    fill_holes = ndi.binary_fill_holes(edges)
 
-    # Return annotated PET scan image and cross-sectional area
-    return img_annotated, area
+    superimpose = crop.copy()
+    get_high_vals = fill_holes == 0
+    superimpose[get_high_vals] = 0
+
+    superimpose = cv2.resize(superimpose, (512, 512))
+    return superimpose
