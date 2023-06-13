@@ -124,7 +124,7 @@ termcolor==2.3.0
 threadpoolctl==3.1.0
 tifffile==2023.4.12
 tomli==2.0.1
-tornado==6.2
+tornado==6.3.2
 traitlets==5.9.0
 typing_extensions==4.5.0
 ubuntu-advantage-tools==8001
